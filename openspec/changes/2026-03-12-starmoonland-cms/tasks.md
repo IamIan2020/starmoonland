@@ -76,16 +76,16 @@
 
 - [x] 7.1 建立 PublicHeader（響應式導覽列：8 主選單 + 下拉子選單 + 手機漢堡選單）
 - [x] 7.2 建立 PublicFooter（聯絡資訊 + 社群連結）
-- [ ] 7.3 建立 HomeView（HeroSlider + 新聞預覽 + 服務四宮格 + 餐飲 + 婚宴 + 相簿預覽）
-- [ ] 7.4 建立 HeroSlider 元件（Swiper 取代 Owl Carousel）
-- [ ] 7.5 建立 PageCategory 共用元件（About/Service/Dining/Wedding 使用 — 分類頁籤 + Swiper thumbs 輪播 + 內容 Tab）
-- [ ] 7.6 建立 AboutView、ServiceView、DiningView、WeddingView（使用 PageCategory 元件）
-- [ ] 7.7 建立 NewsListView + NewsDetailView（分頁、分類篩選）
-- [ ] 7.8 建立 AlbumListView（無限捲動）+ AlbumDetailView（Fancybox 燈箱）
-- [ ] 7.9 建立 TrafficView（Tab 切換 + Google Maps embed）
-- [ ] 7.10 建立 ContactView（聯絡表單 + 前端驗證）
-- [ ] 7.11 建立 Breadcrumb 元件
-- [ ] 7.12 驗證所有前台頁面顯示正確 + 響應式測試（npm run build 成功）
+- [x] 7.3 建立 HomeView（HeroSlider + 新聞預覽 + 服務四宮格 + 餐飲 + 婚宴 + 相簿預覽）
+- [x] 7.4 建立 HeroSlider 元件（Swiper 取代 Owl Carousel）
+- [x] 7.5 建立 PageCategory 共用元件（About/Service/Dining/Wedding 使用 — 分類頁籤 + Swiper thumbs 輪播 + 內容 Tab）
+- [x] 7.6 建立 AboutView、ServiceView、DiningView、WeddingView（使用 PageCategory 元件）
+- [x] 7.7 建立 NewsListView + NewsDetailView（分頁、分類篩選）
+- [x] 7.8 建立 AlbumListView（無限捲動）+ AlbumDetailView（Fancybox 燈箱）
+- [x] 7.9 建立 TrafficView（Tab 切換 + Google Maps embed）
+- [x] 7.10 建立 ContactView（聯絡表單 + 前端驗證）
+- [x] 7.11 建立 Breadcrumb 元件
+- [x] 7.12 驗證所有前台頁面顯示正確 + 響應式測試（npm run build 成功）
 
 ## 8. 後台管理面板（PrimeVue 4）
 
@@ -124,7 +124,7 @@
 | 4. 公開 API | 10/10 | ✅ 完成 |
 | 5. 管理 API | 10/11 | 進行中 |
 | 6. 前端類型定義與 API 層 | 6/6 | ✅ 完成 |
-| 7. 前台公開網站 | 2/12 | 進行中 |
+| 7. 前台公開網站 | 12/12 | ✅ 完成 |
 | 8. 後台管理面板 | 2/13 | 進行中 |
 | 9. 整合測試與內容遷移 | 0/6 | 未開始 |
-| **合計** | **56/85** | **進行中** |
+| **合計** | **66/85** | **進行中** |
