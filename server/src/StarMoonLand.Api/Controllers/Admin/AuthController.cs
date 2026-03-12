@@ -24,15 +24,17 @@ public class AuthController : ControllerBase
         if (!result.Success)
             return Unauthorized(ApiResponse<object>.Fail(result.Error!));
 
+        var userObj = result.User!;
+        var type = userObj.GetType();
         var response = new LoginResponse
         {
             AccessToken = result.AccessToken!,
             RefreshToken = result.RefreshToken!,
             User = new UserInfo
             {
-                Id = ((dynamic)result.User!).id,
-                Email = ((dynamic)result.User!).email,
-                DisplayName = ((dynamic)result.User!).displayName,
+                Id = type.GetProperty("id")?.GetValue(userObj)?.ToString() ?? "",
+                Email = type.GetProperty("email")?.GetValue(userObj)?.ToString() ?? "",
+                DisplayName = type.GetProperty("displayName")?.GetValue(userObj)?.ToString() ?? "",
             }
         };
 
