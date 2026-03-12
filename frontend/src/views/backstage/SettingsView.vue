@@ -32,7 +32,7 @@ const loadSettings = async () => {
   try {
     const { data } = await settingsApi.getSiteSettings()
     if (data.success && data.data) settings.value = data.data as SiteSettingDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
   loading.value = false
 }
 

@@ -18,6 +18,8 @@ public class AdminSettingsController : ControllerBase
     [HttpPut("site-settings")]
     public async Task<IActionResult> UpdateSettings([FromBody] UpdateSettingsRequest request)
     {
+        if (request?.Settings == null) return BadRequest(ApiResponse.Fail("設定資料不可為空"));
+
         foreach (var item in request.Settings)
         {
             var setting = await _db.SiteSettings.FirstOrDefaultAsync(s => s.Key == item.Key);
@@ -41,6 +43,8 @@ public class AdminSettingsController : ControllerBase
     [HttpPut("homepage/slides")]
     public async Task<IActionResult> UpdateSlides([FromBody] List<HomepageSlide> slides)
     {
+        if (slides == null) return BadRequest(ApiResponse.Fail("輪播資料不可為空"));
+
         var existing = await _db.HomepageSlides.ToListAsync();
         _db.HomepageSlides.RemoveRange(existing);
         foreach (var s in slides) s.Id = 0;
@@ -59,6 +63,8 @@ public class AdminSettingsController : ControllerBase
     [HttpPut("traffic")]
     public async Task<IActionResult> UpdateTraffic([FromBody] List<TrafficInfo> items)
     {
+        if (items == null) return BadRequest(ApiResponse.Fail("交通資訊不可為空"));
+
         var existing = await _db.TrafficInfos.ToListAsync();
         _db.TrafficInfos.RemoveRange(existing);
         foreach (var t in items) t.Id = 0;

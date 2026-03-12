@@ -34,6 +34,9 @@ public class AdminAlbumsController : ControllerBase
     [HttpPost("albums")]
     public async Task<IActionResult> Create([FromBody] Album album)
     {
+        if (string.IsNullOrWhiteSpace(album.Title))
+            return BadRequest(ApiResponse.Fail("標題不可為空"));
+
         _db.Albums.Add(album);
         await _db.SaveChangesAsync();
         return Ok(ApiResponse<object>.Ok(album));
@@ -44,6 +47,9 @@ public class AdminAlbumsController : ControllerBase
     {
         var album = await _db.Albums.FindAsync(id);
         if (album == null) return NotFound(ApiResponse.Fail("相簿不存在"));
+
+        if (string.IsNullOrWhiteSpace(input.Title))
+            return BadRequest(ApiResponse.Fail("標題不可為空"));
 
         album.CategoryId = input.CategoryId;
         album.Title = input.Title;
@@ -69,6 +75,8 @@ public class AdminAlbumsController : ControllerBase
     [HttpPut("albums/{id}/photos")]
     public async Task<IActionResult> UpdatePhotos(int id, [FromBody] List<AlbumPhoto> photos)
     {
+        if (photos == null) return BadRequest(ApiResponse.Fail("照片資料不可為空"));
+
         var album = await _db.Albums.Include(a => a.Photos).FirstOrDefaultAsync(a => a.Id == id);
         if (album == null) return NotFound(ApiResponse.Fail("相簿不存在"));
 

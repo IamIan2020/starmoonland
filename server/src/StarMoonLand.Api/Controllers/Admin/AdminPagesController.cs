@@ -29,6 +29,9 @@ public class AdminPagesController : ControllerBase
     [HttpPost("page-categories")]
     public async Task<IActionResult> CreateCategory([FromBody] PageCategory category)
     {
+        if (string.IsNullOrWhiteSpace(category.Slug) || string.IsNullOrWhiteSpace(category.TitleZh))
+            return BadRequest(ApiResponse.Fail("Slug 和中文標題不可為空"));
+
         _db.PageCategories.Add(category);
         await _db.SaveChangesAsync();
         return Ok(ApiResponse<object>.Ok(category));
@@ -39,6 +42,9 @@ public class AdminPagesController : ControllerBase
     {
         var category = await _db.PageCategories.FindAsync(id);
         if (category == null) return NotFound(ApiResponse.Fail("分類不存在"));
+
+        if (string.IsNullOrWhiteSpace(input.Slug) || string.IsNullOrWhiteSpace(input.TitleZh))
+            return BadRequest(ApiResponse.Fail("Slug 和中文標題不可為空"));
 
         category.Slug = input.Slug;
         category.TitleZh = input.TitleZh;
@@ -75,6 +81,9 @@ public class AdminPagesController : ControllerBase
     [HttpPost("pages")]
     public async Task<IActionResult> CreatePage([FromBody] Page page)
     {
+        if (string.IsNullOrWhiteSpace(page.Title) || string.IsNullOrWhiteSpace(page.Slug))
+            return BadRequest(ApiResponse.Fail("標題和 Slug 不可為空"));
+
         _db.Pages.Add(page);
         await _db.SaveChangesAsync();
         return Ok(ApiResponse<object>.Ok(page));
@@ -85,6 +94,9 @@ public class AdminPagesController : ControllerBase
     {
         var page = await _db.Pages.FindAsync(id);
         if (page == null) return NotFound(ApiResponse.Fail("頁面不存在"));
+
+        if (string.IsNullOrWhiteSpace(input.Title) || string.IsNullOrWhiteSpace(input.Slug))
+            return BadRequest(ApiResponse.Fail("標題和 Slug 不可為空"));
 
         page.CategoryId = input.CategoryId;
         page.Slug = input.Slug;
@@ -113,6 +125,8 @@ public class AdminPagesController : ControllerBase
     [HttpPut("pages/{id}/slides")]
     public async Task<IActionResult> UpdateSlides(int id, [FromBody] List<PageSlide> slides)
     {
+        if (slides == null) return BadRequest(ApiResponse.Fail("輪播資料不可為空"));
+
         var page = await _db.Pages.Include(p => p.Slides).FirstOrDefaultAsync(p => p.Id == id);
         if (page == null) return NotFound(ApiResponse.Fail("頁面不存在"));
 
@@ -126,6 +140,8 @@ public class AdminPagesController : ControllerBase
     [HttpPut("pages/{id}/tabs")]
     public async Task<IActionResult> UpdateTabs(int id, [FromBody] List<PageTab> tabs)
     {
+        if (tabs == null) return BadRequest(ApiResponse.Fail("Tab 資料不可為空"));
+
         var page = await _db.Pages.Include(p => p.Tabs).FirstOrDefaultAsync(p => p.Id == id);
         if (page == null) return NotFound(ApiResponse.Fail("頁面不存在"));
 

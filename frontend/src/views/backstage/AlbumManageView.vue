@@ -43,7 +43,7 @@ const loadCategories = async () => {
   try {
     const { data } = await albumsApi.adminGetCategories()
     if (data.success && data.data) categories.value = data.data as AlbumCategoryDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
 }
 
 const loadAlbums = async () => {
@@ -51,7 +51,7 @@ const loadAlbums = async () => {
   try {
     const { data } = await albumsApi.adminGetList({ categoryId: filterCategoryId.value })
     if (data.success && data.data) albums.value = data.data as AlbumDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
   loading.value = false
 }
 

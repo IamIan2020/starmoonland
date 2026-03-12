@@ -24,7 +24,7 @@ onMounted(async () => {
     }
     if (newsRes.data) recentNews.value = newsRes.data.data
     if (albumsRes.data?.success && albumsRes.data.data) albumCount.value = (albumsRes.data.data as AlbumDto[]).length
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
 })
 </script>
 

@@ -4,6 +4,7 @@ import { useRoute } from 'vue-router'
 import Breadcrumb from '@/components/public/Breadcrumb.vue'
 import { newsApi } from '@/api/news'
 import type { NewsDto } from '@/types/api'
+import { sanitizeHtml } from '@/utils/sanitize'
 
 const route = useRoute()
 const news = ref<NewsDto | null>(null)
@@ -13,7 +14,7 @@ onMounted(async () => {
   try {
     const { data } = await newsApi.getDetail(id)
     if (data.success && data.data) news.value = data.data as NewsDto
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
 })
 </script>
 
@@ -33,7 +34,7 @@ onMounted(async () => {
         :alt="news.title"
         class="w-full mb-8"
       />
-      <div class="prose max-w-none" v-html="news.content" />
+      <div class="prose max-w-none" v-html="sanitizeHtml(news.content ?? '')" />
     </div>
 
     <div v-else class="py-20 text-center text-gray-text">載入中...</div>

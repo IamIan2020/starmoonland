@@ -39,6 +39,9 @@ public class AdminNewsController : ControllerBase
     [HttpPost("news")]
     public async Task<IActionResult> Create([FromBody] News news)
     {
+        if (string.IsNullOrWhiteSpace(news.Title))
+            return BadRequest(ApiResponse.Fail("標題不可為空"));
+
         _db.News.Add(news);
         await _db.SaveChangesAsync();
         return Ok(ApiResponse<object>.Ok(news));
@@ -49,6 +52,9 @@ public class AdminNewsController : ControllerBase
     {
         var news = await _db.News.FindAsync(id);
         if (news == null) return NotFound(ApiResponse.Fail("新聞不存在"));
+
+        if (string.IsNullOrWhiteSpace(input.Title))
+            return BadRequest(ApiResponse.Fail("標題不可為空"));
 
         news.CategoryId = input.CategoryId;
         news.Title = input.Title;

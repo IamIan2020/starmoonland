@@ -31,7 +31,7 @@ const editorConfig: Partial<IEditorConfig> = {
       headers: {
         Authorization: `Bearer ${localStorage.getItem('accessToken') || ''}`,
       },
-      customInsert(res: any, insertFn: (url: string, alt?: string, href?: string) => void) {
+      customInsert(res: { success?: boolean; data?: { filePath?: string; originalName?: string } }, insertFn: (url: string, alt?: string, href?: string) => void) {
         if (res.success && res.data) {
           insertFn(`/uploads/${res.data.filePath}`, res.data.originalName, '')
         }

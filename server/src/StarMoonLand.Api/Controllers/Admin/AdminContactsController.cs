@@ -14,11 +14,13 @@ public class AdminContactsController : ControllerBase
 {
     private readonly AppDbContext _db;
     private readonly IEmailService _emailService;
+    private readonly ILogger<AdminContactsController> _logger;
 
-    public AdminContactsController(AppDbContext db, IEmailService emailService)
+    public AdminContactsController(AppDbContext db, IEmailService emailService, ILogger<AdminContactsController> logger)
     {
         _db = db;
         _emailService = emailService;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -65,7 +67,7 @@ public class AdminContactsController : ControllerBase
                 $"<h3>親愛的 {contact.Name}，您好</h3><p>感謝您的來信，以下是我們的回覆：</p><hr/><p>{request.ReplyContent}</p><hr/><p>您的原始詢問：</p><p>{contact.Message}</p><br/><p>星月大地景觀休閒園區</p>"
             );
         }
-        catch { /* 發信失敗不影響儲存 */ }
+        catch (Exception ex) { _logger.LogWarning(ex, "回覆通知信發送失敗"); }
 
         return Ok(ApiResponse.Ok("已回覆"));
     }

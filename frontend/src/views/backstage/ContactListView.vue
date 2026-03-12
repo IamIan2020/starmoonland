@@ -44,11 +44,11 @@ const loadContacts = async () => {
     })
     contacts.value = data.data
     totalRecords.value = data.totalCount
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
   loading.value = false
 }
 
-const onPage = (event: any) => {
+const onPage = (event: { page: number; rows: number }) => {
   currentPage.value = event.page + 1
   pageSize.value = event.rows
   loadContacts()
@@ -65,7 +65,7 @@ const viewDetail = async (contact: ContactSubmissionDto) => {
     try {
       await contactsApi.adminMarkRead(contact.id)
       contact.isRead = true
-    } catch { /* 靜默 */ }
+    } catch (err) { console.error(err) }
   }
 }
 

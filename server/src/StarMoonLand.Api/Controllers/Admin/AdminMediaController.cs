@@ -17,12 +17,14 @@ public class AdminMediaController : ControllerBase
     private readonly AppDbContext _db;
     private readonly IConfiguration _config;
     private readonly IWebHostEnvironment _env;
+    private readonly ILogger<AdminMediaController> _logger;
 
-    public AdminMediaController(AppDbContext db, IConfiguration config, IWebHostEnvironment env)
+    public AdminMediaController(AppDbContext db, IConfiguration config, IWebHostEnvironment env, ILogger<AdminMediaController> logger)
     {
         _db = db;
         _config = config;
         _env = env;
+        _logger = logger;
     }
 
     [HttpGet]
@@ -82,7 +84,7 @@ public class AdminMediaController : ControllerBase
                 await image.SaveAsync(thumbPath);
                 thumbnailPath = $"{dateDir}/{thumbFilename}";
             }
-            catch { /* 縮圖失敗不影響上傳 */ }
+            catch (Exception ex) { _logger.LogWarning(ex, "縮圖產生失敗: {FileName}", file.FileName); }
         }
 
         var mediaFile = new MediaFile

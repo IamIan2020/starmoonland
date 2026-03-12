@@ -6,6 +6,7 @@ import Breadcrumb from './Breadcrumb.vue'
 import PageSlides from './PageSlides.vue'
 import { pagesApi } from '@/api/pages'
 import type { PageDto } from '@/types/api'
+import { sanitizeHtml } from '@/utils/sanitize'
 
 const props = defineProps<{
   categorySlug: string
@@ -29,7 +30,7 @@ const loadCategory = async () => {
       const slug = route.params.slug as string || pages.value[0]?.slug
       if (slug) await loadPage(slug)
     }
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
   loading.value = false
 }
 
@@ -40,7 +41,7 @@ const loadPage = async (slug: string) => {
       currentPage.value = data.data as PageDto
       activeTab.value = 0
     }
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
 }
 
 const selectPage = (slug: string) => {
@@ -116,11 +117,11 @@ onMounted(loadCategory)
             {{ tab.title }}
           </button>
         </div>
-        <div v-if="currentPage.tabs?.[activeTab]" class="prose max-w-none" v-html="currentPage.tabs[activeTab]!.content" />
+        <div v-if="currentPage.tabs?.[activeTab]" class="prose max-w-none" v-html="sanitizeHtml(currentPage.tabs[activeTab]!.content ?? '')" />
       </div>
 
       <!-- 一般內容 -->
-      <div v-else-if="currentPage?.content" class="prose max-w-none" v-html="currentPage.content" />
+      <div v-else-if="currentPage?.content" class="prose max-w-none" v-html="sanitizeHtml(currentPage.content ?? '')" />
     </div>
   </div>
 </template>

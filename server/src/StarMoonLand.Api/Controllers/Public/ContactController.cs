@@ -13,11 +13,13 @@ public class ContactController : ControllerBase
 {
     private readonly AppDbContext _db;
     private readonly IEmailService _emailService;
+    private readonly ILogger<ContactController> _logger;
 
-    public ContactController(AppDbContext db, IEmailService emailService)
+    public ContactController(AppDbContext db, IEmailService emailService, ILogger<ContactController> logger)
     {
         _db = db;
         _emailService = emailService;
+        _logger = logger;
     }
 
     [HttpPost]
@@ -50,7 +52,7 @@ public class ContactController : ControllerBase
                     $"<h3>新的聯絡表單</h3><p><strong>姓名：</strong>{request.Name}</p><p><strong>電話：</strong>{request.Phone}</p><p><strong>Email：</strong>{request.Email}</p><p><strong>詢問事項：</strong></p><p>{request.Message}</p>"
                 );
             }
-            catch { /* 發信失敗不影響表單送出 */ }
+            catch (Exception ex) { _logger.LogWarning(ex, "聯絡表單通知信發送失敗"); }
         }
 
         return Ok(ApiResponse.Ok("感謝您的留言，我們會盡快回覆"));

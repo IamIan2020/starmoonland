@@ -20,7 +20,7 @@ const loadNews = async () => {
       news.value = data.data
       totalPages.value = data.totalPages
     }
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
   loading.value = false
 }
 
@@ -28,7 +28,7 @@ const loadCategories = async () => {
   try {
     const { data } = await newsApi.getCategories()
     if (data.success && data.data) categories.value = data.data as NewsCategoryDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
 }
 
 const filterByCategory = (slug: string) => {

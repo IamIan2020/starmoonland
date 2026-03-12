@@ -21,12 +21,12 @@ const loadFiles = async () => {
   try {
     const { data } = await uploadApi.getList()
     if (data.success && data.data) files.value = data.data as MediaFileDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
   loading.value = false
 }
 
-const onUpload = async (event: any) => {
-  const uploadedFiles = event.files as File[]
+const onUpload = async (event: { files: File | File[] }) => {
+  const uploadedFiles = Array.isArray(event.files) ? event.files : [event.files]
   for (const file of uploadedFiles) {
     try {
       await uploadApi.upload(file)

@@ -56,7 +56,7 @@ const loadCategories = async () => {
   try {
     const { data } = await pagesApi.adminGetCategories()
     if (data.success && data.data) categories.value = data.data as PageCategoryDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
 }
 
 const loadPages = async () => {
@@ -65,7 +65,7 @@ const loadPages = async () => {
   try {
     const { data } = await pagesApi.adminGetPages(selectedCategoryId.value)
     if (data.success && data.data) pages.value = data.data as PageDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
   loading.value = false
 }
 

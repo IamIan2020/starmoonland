@@ -16,7 +16,7 @@ onMounted(async () => {
   try {
     const { data } = await albumsApi.getDetail(id)
     if (data.success && data.data) album.value = data.data as AlbumDto
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
 })
 </script>
 

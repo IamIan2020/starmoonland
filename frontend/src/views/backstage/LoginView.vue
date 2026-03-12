@@ -19,8 +19,8 @@ const handleLogin = async () => {
     await authStore.login(email.value, password.value)
     const redirect = (route.query.redirect as string) || '/backstage'
     router.push(redirect)
-  } catch (e: any) {
-    error.value = e.message || '登入失敗'
+  } catch (e: unknown) {
+    error.value = e instanceof Error ? e.message : '登入失敗'
   } finally {
     loading.value = false
   }

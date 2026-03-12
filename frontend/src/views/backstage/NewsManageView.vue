@@ -43,7 +43,7 @@ const loadCategories = async () => {
   try {
     const { data } = await newsApi.adminGetCategories()
     if (data.success && data.data) categories.value = data.data as NewsCategoryDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
 }
 
 const loadNews = async () => {
@@ -56,11 +56,11 @@ const loadNews = async () => {
     })
     newsList.value = data.data
     totalRecords.value = data.totalCount
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
   loading.value = false
 }
 
-const onPage = (event: any) => {
+const onPage = (event: { page: number; rows: number }) => {
   currentPage.value = event.page + 1
   pageSize.value = event.rows
   loadNews()

@@ -11,7 +11,7 @@ onMounted(async () => {
   try {
     const res = await settingsApi.getHomepage()
     if (res.data.success && res.data.data) data.value = res.data.data
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
 })
 
 const services = [

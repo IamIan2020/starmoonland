@@ -4,6 +4,7 @@ import Breadcrumb from '@/components/public/Breadcrumb.vue'
 import { settingsApi } from '@/api/settings'
 import { useSettingsStore } from '@/stores/settings'
 import type { TrafficInfoDto } from '@/types/api'
+import { sanitizeHtml } from '@/utils/sanitize'
 
 const settings = useSettingsStore()
 const trafficInfos = ref<TrafficInfoDto[]>([])
@@ -13,7 +14,7 @@ onMounted(async () => {
   try {
     const { data } = await settingsApi.getTraffic()
     if (data.success && data.data) trafficInfos.value = data.data as TrafficInfoDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
 })
 </script>
 
@@ -41,7 +42,7 @@ onMounted(async () => {
         </button>
       </div>
 
-      <div v-if="trafficInfos[activeTab]" class="prose max-w-none mb-10" v-html="trafficInfos[activeTab]!.content" />
+      <div v-if="trafficInfos[activeTab]" class="prose max-w-none mb-10" v-html="sanitizeHtml(trafficInfos[activeTab]!.content ?? '')" />
 
       <!-- Google Maps -->
       <div v-if="settings.get('google_maps_embed')" class="aspect-video">

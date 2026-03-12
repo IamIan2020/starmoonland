@@ -12,7 +12,7 @@ onMounted(async () => {
   try {
     const { data } = await albumsApi.getList()
     if (data.success && data.data) albums.value = data.data as AlbumDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err) }
   loading.value = false
 })
 </script>

@@ -24,7 +24,7 @@ const loadTraffic = async () => {
   try {
     const { data } = await settingsApi.adminGetTraffic()
     if (data.success && data.data) trafficInfos.value = data.data as TrafficInfoDto[]
-  } catch { /* 靜默 */ }
+  } catch (err) { console.error(err); toast.add({ severity: 'error', summary: '錯誤', detail: '載入失敗', life: 3000 }) }
   loading.value = false
 }
 
