@@ -1,11 +1,9 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Swiper, SwiperSlide } from 'swiper/vue'
-import { Navigation, Thumbs } from 'swiper/modules'
-import type SwiperType from 'swiper'
 import 'swiper/swiper-bundle.css'
 import Breadcrumb from './Breadcrumb.vue'
+import PageSlides from './PageSlides.vue'
 import { pagesApi } from '@/api/pages'
 import type { PageDto } from '@/types/api'
 
@@ -17,24 +15,17 @@ const props = defineProps<{
 
 const route = useRoute()
 const router = useRouter()
-const modules = [Navigation, Thumbs]
 
 const pages = ref<{ id: number; slug: string; title: string; subtitle?: string }[]>([])
 const currentPage = ref<PageDto | null>(null)
 const activeTab = ref(0)
-const thumbsSwiper = ref<SwiperType | null>(null)
 const loading = ref(true)
-
-const setThumbsSwiper = (swiper: SwiperType) => {
-  thumbsSwiper.value = swiper
-}
 
 const loadCategory = async () => {
   try {
     const { data } = await pagesApi.getCategory(props.categorySlug)
     if (data.success && data.data) {
       pages.value = (data.data as any).pages || []
-      // 載入指定或第一個子頁面
       const slug = route.params.slug as string || pages.value[0]?.slug
       if (slug) await loadPage(slug)
     }
@@ -53,12 +44,16 @@ const loadPage = async (slug: string) => {
 }
 
 const selectPage = (slug: string) => {
-  router.push(`/${props.categorySlug}/${slug}`)
+  if (currentPage.value?.slug === slug) return
+  // 先清除當前頁面，確保子元件卸載
+  currentPage.value = null
+  router.replace(`/${props.categorySlug}/${slug}`)
   loadPage(slug)
 }
 
-watch(() => route.params.slug, (newSlug) => {
-  if (newSlug && typeof newSlug === 'string') loadPage(newSlug)
+watch(() => route.params.slug, (newSlug, oldSlug) => {
+  if (newSlug && newSlug !== oldSlug && typeof newSlug === 'string' && newSlug !== currentPage.value?.slug)
+    loadPage(newSlug)
 })
 
 onMounted(loadCategory)
@@ -97,48 +92,12 @@ onMounted(loadCategory)
         </button>
       </div>
 
-      <!-- 輪播圖區域 -->
-      <div v-if="currentPage?.slides?.length" class="mb-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-          <!-- 文字導覽 -->
-          <div class="lg:col-span-1">
-            <Swiper
-              :modules="modules"
-              :slides-per-view="3"
-              :space-between="8"
-              direction="vertical"
-              class="h-[300px] lg:h-[400px]"
-              @swiper="setThumbsSwiper"
-            >
-              <SwiperSlide
-                v-for="slide in currentPage.slides"
-                :key="slide.id"
-                class="cursor-pointer"
-              >
-                <div class="p-3 border border-gold/20 hover:border-gold transition h-full flex items-center">
-                  <div>
-                    <p v-if="slide.title" class="text-sm font-bold text-dark">{{ slide.title }}</p>
-                    <p v-if="slide.description" class="text-xs text-gray-text mt-1">{{ slide.description }}</p>
-                  </div>
-                </div>
-              </SwiperSlide>
-            </Swiper>
-          </div>
-          <!-- 大圖 -->
-          <div class="lg:col-span-2">
-            <Swiper
-              :modules="modules"
-              :thumbs="{ swiper: thumbsSwiper }"
-              :navigation="true"
-              class="h-[300px] lg:h-[400px]"
-            >
-              <SwiperSlide v-for="slide in currentPage.slides" :key="slide.id">
-                <img :src="`/uploads/${slide.imageUrl}`" :alt="slide.title || ''" class="w-full h-full object-cover" />
-              </SwiperSlide>
-            </Swiper>
-          </div>
-        </div>
-      </div>
+      <!-- 輪播圖區域（獨立元件，避免 Swiper 狀態汙染） -->
+      <PageSlides
+        v-if="currentPage?.slides?.length"
+        :key="currentPage.slug"
+        :slides="currentPage.slides"
+      />
 
       <!-- Tab 內容 -->
       <div v-if="currentPage?.tabs?.length">
