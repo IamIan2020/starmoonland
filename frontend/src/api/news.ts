@@ -9,6 +9,9 @@ export const newsApi = {
   getDetail: (id: number) =>
     apiClient.get<ApiResponse<NewsDto>>(`/news/${id}`),
 
+  getCategories: () =>
+    apiClient.get<ApiResponse<NewsCategoryDto[]>>('/news/categories'),
+
   // 管理 API
   adminGetCategories: () =>
     apiClient.get<ApiResponse<NewsCategoryDto[]>>('/admin/news-categories'),

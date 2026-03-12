@@ -26,8 +26,8 @@ const loadNews = async () => {
 
 const loadCategories = async () => {
   try {
-    const { data } = await newsApi.adminGetCategories()
-    if (data.success && data.data) categories.value = data.data
+    const { data } = await newsApi.getCategories()
+    if (data.success && data.data) categories.value = data.data as NewsCategoryDto[]
   } catch { /* 靜默 */ }
 }
 

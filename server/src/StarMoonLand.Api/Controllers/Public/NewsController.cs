@@ -12,6 +12,15 @@ public class NewsController : ControllerBase
     private readonly AppDbContext _db;
     public NewsController(AppDbContext db) => _db = db;
 
+    [HttpGet("categories")]
+    public async Task<IActionResult> GetCategories()
+    {
+        var categories = await _db.NewsCategories.OrderBy(c => c.SortOrder)
+            .Select(c => new { c.Id, c.Name, c.Slug, c.SortOrder })
+            .ToListAsync();
+        return Ok(ApiResponse<object>.Ok(categories));
+    }
+
     [HttpGet]
     public async Task<IActionResult> GetList([FromQuery] int page = 1, [FromQuery] int pageSize = 10, [FromQuery] string? category = null)
     {
