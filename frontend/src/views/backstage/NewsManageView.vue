@@ -11,6 +11,7 @@ import Checkbox from 'primevue/checkbox'
 import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 import WangEditor from '@/components/WangEditor.vue'
+import ImageUploader from '@/components/ImageUploader.vue'
 import { newsApi } from '@/api/news'
 import type { NewsDto, NewsCategoryDto } from '@/types/api'
 
@@ -201,42 +202,55 @@ onMounted(async () => {
       </Column>
     </DataTable>
 
-    <Dialog v-model:visible="newsDialog" :header="form.id ? '編輯新聞' : '新增新聞'" :style="{ width: '80vw' }" modal>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-        <div>
-          <label class="block text-sm font-medium mb-1">標題 *</label>
-          <InputText v-model="form.title" class="w-full" />
+    <Dialog
+      v-model:visible="newsDialog"
+      :header="form.id ? '編輯新聞' : '新增新聞'"
+      :style="{ width: '80vw', maxWidth: '1000px' }"
+      :position="'top'"
+      :draggable="false"
+      modal
+    >
+      <div :style="{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }">
+        <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4 mb-4">
+          <!-- 封面圖片 -->
+          <div>
+            <label class="block text-sm font-medium mb-1">封面圖片</label>
+            <ImageUploader v-model="form.coverImage" height="160px" />
+          </div>
+          <!-- 基本欄位 -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">標題 *</label>
+              <InputText v-model="form.title" class="w-full" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">分類 *</label>
+              <Select v-model="form.categoryId" :options="categories" optionLabel="name" optionValue="id" class="w-full" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium mb-1">發佈日期</label>
+              <InputText v-model="form.publishDate" class="w-full" placeholder="YYYY-MM-DD" />
+            </div>
+            <div class="flex items-end gap-4 pb-1">
+              <div>
+                <Checkbox v-model="form.isPublished" :binary="true" inputId="newsPublished" />
+                <label for="newsPublished" class="ml-2 text-sm">發佈</label>
+              </div>
+              <div>
+                <Checkbox v-model="form.isPinned" :binary="true" inputId="newsPinned" />
+                <label for="newsPinned" class="ml-2 text-sm">置頂</label>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">分類 *</label>
-          <Select v-model="form.categoryId" :options="categories" optionLabel="name" optionValue="id" class="w-full" />
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">摘要</label>
+          <Textarea v-model="form.summary" rows="3" class="w-full" />
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">發佈日期</label>
-          <InputText v-model="form.publishDate" class="w-full" placeholder="YYYY-MM-DD" />
+        <div class="mb-4">
+          <label class="block text-sm font-medium mb-1">內容</label>
+          <WangEditor v-model="form.content" />
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">封面圖片路徑</label>
-          <InputText v-model="form.coverImage" class="w-full" placeholder="例：news/cover1.jpg" />
-        </div>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium mb-1">摘要</label>
-        <Textarea v-model="form.summary" rows="3" class="w-full" />
-      </div>
-      <div class="flex gap-4 mb-4">
-        <div>
-          <Checkbox v-model="form.isPublished" :binary="true" inputId="newsPublished" />
-          <label for="newsPublished" class="ml-2 text-sm">發佈</label>
-        </div>
-        <div>
-          <Checkbox v-model="form.isPinned" :binary="true" inputId="newsPinned" />
-          <label for="newsPinned" class="ml-2 text-sm">置頂</label>
-        </div>
-      </div>
-      <div class="mb-4">
-        <label class="block text-sm font-medium mb-1">內容</label>
-        <WangEditor v-model="form.content" />
       </div>
       <template #footer>
         <Button label="取消" severity="secondary" @click="newsDialog = false" />

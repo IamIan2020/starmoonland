@@ -17,6 +17,7 @@ import TabPanel from 'primevue/tabpanel'
 import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
 import WangEditor from '@/components/WangEditor.vue'
+import ImageUploader from '@/components/ImageUploader.vue'
 import { pagesApi } from '@/api/pages'
 import type { PageCategoryDto, PageDto, PageSlideDto, PageTabDto } from '@/types/api'
 
@@ -349,18 +350,20 @@ onMounted(async () => {
                     <span class="font-medium">圖片 {{ idx + 1 }}</span>
                     <Button icon="pi pi-trash" severity="danger" size="small" text @click="removeSlide(idx)" />
                   </div>
-                  <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <div class="grid grid-cols-1 md:grid-cols-[150px_1fr] gap-3">
                     <div>
-                      <label class="block text-sm mb-1">圖片路徑</label>
-                      <InputText v-model="slide.imageUrl" class="w-full" placeholder="例：/_images/about/pic.png" />
+                      <label class="block text-sm mb-1">圖片</label>
+                      <ImageUploader v-model="slide.imageUrl" height="120px" />
                     </div>
-                    <div>
-                      <label class="block text-sm mb-1">標題（金色面板標題）</label>
-                      <InputText v-model="slide.title" class="w-full" placeholder="例：壯麗山景" />
-                    </div>
-                    <div>
-                      <label class="block text-sm mb-1">描述（金色面板文字）</label>
-                      <Textarea v-model="slide.description" class="w-full" rows="2" placeholder="例：隨著四季..." />
+                    <div class="space-y-3">
+                      <div>
+                        <label class="block text-sm mb-1">標題（金色面板標題）</label>
+                        <InputText v-model="slide.title" class="w-full" placeholder="例：壯麗山景" />
+                      </div>
+                      <div>
+                        <label class="block text-sm mb-1">描述（金色面板文字）</label>
+                        <Textarea v-model="slide.description" class="w-full" rows="2" placeholder="例：隨著四季..." />
+                      </div>
                     </div>
                   </div>
                 </div>

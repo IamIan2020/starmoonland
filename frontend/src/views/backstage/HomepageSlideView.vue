@@ -5,6 +5,7 @@ import InputText from 'primevue/inputtext'
 import InputNumber from 'primevue/inputnumber'
 import Checkbox from 'primevue/checkbox'
 import { useToast } from 'primevue/usetoast'
+import ImageUploader from '@/components/ImageUploader.vue'
 import { settingsApi } from '@/api/settings'
 import type { HomepageSlideDto } from '@/types/api'
 
@@ -71,32 +72,33 @@ onMounted(loadSlides)
           <h3 class="font-medium">輪播 {{ idx + 1 }}</h3>
           <Button icon="pi pi-trash" severity="danger" size="small" text @click="removeSlide(idx)" />
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div class="grid grid-cols-1 md:grid-cols-[200px_1fr] gap-4">
+          <!-- 圖片上傳 -->
           <div>
-            <label class="block text-sm mb-1">圖片路徑 *</label>
-            <InputText v-model="slide.imageUrl" class="w-full" placeholder="例：slides/hero1.jpg" />
+            <label class="block text-sm mb-1">圖片</label>
+            <ImageUploader v-model="slide.imageUrl" height="120px" />
           </div>
-          <div>
-            <label class="block text-sm mb-1">替代文字</label>
-            <InputText v-model="slide.altText" class="w-full" />
-          </div>
-          <div>
-            <label class="block text-sm mb-1">連結網址</label>
-            <InputText v-model="slide.linkUrl" class="w-full" />
-          </div>
-          <div class="flex items-end gap-4">
+          <!-- 其他欄位 -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
             <div>
-              <label class="block text-sm mb-1">排序</label>
-              <InputNumber v-model="slide.sortOrder" class="w-20" />
+              <label class="block text-sm mb-1">替代文字</label>
+              <InputText v-model="slide.altText" class="w-full" />
             </div>
-            <div class="pb-1">
-              <Checkbox v-model="slide.isActive" :binary="true" :inputId="`slideActive${idx}`" />
-              <label :for="`slideActive${idx}`" class="ml-1 text-sm">啟用</label>
+            <div>
+              <label class="block text-sm mb-1">連結網址</label>
+              <InputText v-model="slide.linkUrl" class="w-full" />
+            </div>
+            <div class="flex items-end gap-4">
+              <div>
+                <label class="block text-sm mb-1">排序</label>
+                <InputNumber v-model="slide.sortOrder" class="w-20" />
+              </div>
+              <div class="pb-1">
+                <Checkbox v-model="slide.isActive" :binary="true" :inputId="`slideActive${idx}`" />
+                <label :for="`slideActive${idx}`" class="ml-1 text-sm">啟用</label>
+              </div>
             </div>
           </div>
-        </div>
-        <div v-if="slide.imageUrl" class="mt-3">
-          <img :src="`/uploads/${slide.imageUrl}`" class="h-20 object-cover rounded" />
         </div>
       </div>
 

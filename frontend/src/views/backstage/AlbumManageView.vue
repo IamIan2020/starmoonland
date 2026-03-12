@@ -11,7 +11,9 @@ import Select from 'primevue/select'
 import Checkbox from 'primevue/checkbox'
 import { useConfirm } from 'primevue/useconfirm'
 import { useToast } from 'primevue/usetoast'
+import ImageUploader from '@/components/ImageUploader.vue'
 import { albumsApi } from '@/api/albums'
+import { resolveImageUrl } from '@/utils/image'
 import type { AlbumDto, AlbumCategoryDto, AlbumPhotoDto } from '@/types/api'
 
 const confirm = useConfirm()
@@ -186,7 +188,7 @@ onMounted(async () => {
     <DataTable :value="albums" :loading="loading" stripedRows>
       <Column header="封面" style="width: 80px">
         <template #body="{ data }">
-          <img v-if="data.coverImage" :src="`/uploads/${data.coverImage}`" class="w-12 h-12 object-cover rounded" />
+          <img v-if="data.coverImage" :src="resolveImageUrl(data.coverImage)" class="w-12 h-12 object-cover rounded" />
           <div v-else class="w-12 h-12 bg-gray-200 rounded flex items-center justify-center">
             <i class="pi pi-image text-gray-400" />
           </div>
@@ -211,32 +213,43 @@ onMounted(async () => {
     </DataTable>
 
     <!-- 相簿編輯 Dialog -->
-    <Dialog v-model:visible="albumDialog" :header="form.id ? '編輯相簿' : '新增相簿'" :style="{ width: '600px' }" modal>
-      <div class="space-y-4">
+    <Dialog
+      v-model:visible="albumDialog"
+      :header="form.id ? '編輯相簿' : '新增相簿'"
+      :style="{ width: '650px' }"
+      :position="'top'"
+      :draggable="false"
+      modal
+    >
+      <div class="grid grid-cols-1 md:grid-cols-[180px_1fr] gap-4">
+        <!-- 封面圖片 -->
         <div>
-          <label class="block text-sm font-medium mb-1">標題 *</label>
-          <InputText v-model="form.title" class="w-full" />
+          <label class="block text-sm font-medium mb-1">封面圖片</label>
+          <ImageUploader v-model="form.coverImage" height="180px" />
         </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">分類</label>
-          <Select v-model="form.categoryId" :options="categories" optionLabel="name" optionValue="id" class="w-full" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">描述</label>
-          <Textarea v-model="form.description" rows="3" class="w-full" />
-        </div>
-        <div>
-          <label class="block text-sm font-medium mb-1">封面圖片路徑</label>
-          <InputText v-model="form.coverImage" class="w-full" placeholder="例：albums/cover1.jpg" />
-        </div>
-        <div class="grid grid-cols-2 gap-4">
+        <!-- 欄位 -->
+        <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium mb-1">排序</label>
-            <InputNumber v-model="form.sortOrder" class="w-full" />
+            <label class="block text-sm font-medium mb-1">標題 *</label>
+            <InputText v-model="form.title" class="w-full" />
           </div>
-          <div class="flex items-end pb-1">
-            <Checkbox v-model="form.isPublished" :binary="true" inputId="albumPublished" />
-            <label for="albumPublished" class="ml-2 text-sm">發佈</label>
+          <div>
+            <label class="block text-sm font-medium mb-1">分類</label>
+            <Select v-model="form.categoryId" :options="categories" optionLabel="name" optionValue="id" class="w-full" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium mb-1">描述</label>
+            <Textarea v-model="form.description" rows="3" class="w-full" />
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium mb-1">排序</label>
+              <InputNumber v-model="form.sortOrder" class="w-full" />
+            </div>
+            <div class="flex items-end pb-1">
+              <Checkbox v-model="form.isPublished" :binary="true" inputId="albumPublished" />
+              <label for="albumPublished" class="ml-2 text-sm">發佈</label>
+            </div>
           </div>
         </div>
       </div>
@@ -247,28 +260,45 @@ onMounted(async () => {
     </Dialog>
 
     <!-- 照片管理 Dialog -->
-    <Dialog v-model:visible="photosDialog" header="照片管理" :style="{ width: '70vw' }" modal>
-      <div v-for="(photo, idx) in photos" :key="idx" class="border rounded p-4 mb-3">
-        <div class="flex justify-between items-center mb-2">
-          <span class="font-medium">照片 {{ idx + 1 }}</span>
-          <Button icon="pi pi-trash" severity="danger" size="small" text @click="removePhoto(idx)" />
+    <Dialog
+      v-model:visible="photosDialog"
+      header="照片管理"
+      :style="{ width: '80vw', maxWidth: '1000px' }"
+      :position="'top'"
+      :draggable="false"
+      modal
+    >
+      <div :style="{ maxHeight: 'calc(100vh - 200px)', overflowY: 'auto' }">
+        <div v-for="(photo, idx) in photos" :key="idx" class="border rounded p-4 mb-3">
+          <div class="flex justify-between items-center mb-2">
+            <span class="font-medium">照片 {{ idx + 1 }}</span>
+            <Button icon="pi pi-trash" severity="danger" size="small" text @click="removePhoto(idx)" />
+          </div>
+          <div class="grid grid-cols-1 md:grid-cols-[150px_1fr] gap-3">
+            <div>
+              <label class="block text-sm mb-1">圖片</label>
+              <ImageUploader v-model="photo.imageUrl" height="120px" />
+            </div>
+            <div class="space-y-3">
+              <div>
+                <label class="block text-sm mb-1">說明文字</label>
+                <InputText v-model="photo.caption" class="w-full" />
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div>
+                  <label class="block text-sm mb-1">縮圖（自動產生，可留空）</label>
+                  <InputText v-model="photo.thumbnailUrl" class="w-full" placeholder="留空自動使用原圖" />
+                </div>
+                <div>
+                  <label class="block text-sm mb-1">排序</label>
+                  <InputNumber v-model="photo.sortOrder" class="w-full" />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-sm mb-1">圖片路徑 *</label>
-            <InputText v-model="photo.imageUrl" class="w-full" />
-          </div>
-          <div>
-            <label class="block text-sm mb-1">縮圖路徑</label>
-            <InputText v-model="photo.thumbnailUrl" class="w-full" />
-          </div>
-          <div>
-            <label class="block text-sm mb-1">說明文字</label>
-            <InputText v-model="photo.caption" class="w-full" />
-          </div>
-        </div>
+        <Button label="新增照片" icon="pi pi-plus" severity="secondary" @click="addPhoto" class="mb-4" />
       </div>
-      <Button label="新增照片" icon="pi pi-plus" severity="secondary" @click="addPhoto" class="mb-4" />
       <template #footer>
         <Button label="取消" severity="secondary" @click="photosDialog = false" />
         <Button label="儲存" icon="pi pi-check" :loading="saving" @click="savePhotos" />
