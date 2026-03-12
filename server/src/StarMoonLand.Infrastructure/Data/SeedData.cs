@@ -110,11 +110,7 @@ public static class SeedData
         await SeedAlbumsIfEmptyAsync(context);
 
         // === 首頁輪播 ===
-        if (!await context.HomepageSlides.AnyAsync())
-        {
-            context.HomepageSlides.Add(new HomepageSlide { ImageUrl = "index/banner-01.png", AltText = "星月大地景觀休閒園區", SortOrder = 1, IsActive = true });
-            await context.SaveChangesAsync();
-        }
+        await SeedHomepageSlidesAsync(context);
 
         // === 網站設定 ===
         await SeedOrUpdateSettingAsync(context, "site_name", "星月大地景觀休閒園區", "網站名稱");
@@ -544,6 +540,33 @@ public static class SeedData
         if (mapsSetting != null && string.IsNullOrEmpty(mapsSetting.Value))
             mapsSetting.Value = "https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d14541.597505171469!2d120.701191!3d24.332577!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xf22f690b198e3e44!2z5pif5pyI5aSn5Zyw5LyR6ZaS5LqL5qWt5pyJ6ZmQ5YWs5Y-4!5e0!3m2!1sen!2shk!4v1465960095168";
 
+        await ctx.SaveChangesAsync();
+    }
+
+    private static async Task SeedHomepageSlidesAsync(AppDbContext ctx)
+    {
+        var slides = new[]
+        {
+            new { ImageUrl = "index/banner-01.png", AltText = "星月大地景觀休閒園區", SortOrder = 1 },
+            new { ImageUrl = "index/banner-02.png", AltText = "大地景觀", SortOrder = 2 },
+            new { ImageUrl = "index/banner-03.png", AltText = "星月餐飲", SortOrder = 3 },
+            new { ImageUrl = "index/banner-04.png", AltText = "星月訊息", SortOrder = 4 },
+        };
+
+        foreach (var s in slides)
+        {
+            var existing = await ctx.HomepageSlides.FirstOrDefaultAsync(h => h.ImageUrl == s.ImageUrl);
+            if (existing == null)
+            {
+                ctx.HomepageSlides.Add(new HomepageSlide
+                {
+                    ImageUrl = s.ImageUrl,
+                    AltText = s.AltText,
+                    SortOrder = s.SortOrder,
+                    IsActive = true
+                });
+            }
+        }
         await ctx.SaveChangesAsync();
     }
 }
