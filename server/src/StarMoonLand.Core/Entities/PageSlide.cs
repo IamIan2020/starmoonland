@@ -9,5 +9,5 @@ public class PageSlide
     public string? Description { get; set; }
     public int SortOrder { get; set; }
 
-    public Page Page { get; set; } = null!;
+    public Page? Page { get; set; }
 }

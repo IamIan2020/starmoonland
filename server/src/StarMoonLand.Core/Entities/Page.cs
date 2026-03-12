@@ -15,7 +15,7 @@ public class Page
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public PageCategory Category { get; set; } = null!;
+    public PageCategory? Category { get; set; }
     public ICollection<PageSlide> Slides { get; set; } = [];
     public ICollection<PageTab> Tabs { get; set; } = [];
 }

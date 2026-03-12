@@ -12,6 +12,6 @@ public class Album
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public AlbumCategory Category { get; set; } = null!;
+    public AlbumCategory? Category { get; set; }
     public ICollection<AlbumPhoto> Photos { get; set; } = [];
 }

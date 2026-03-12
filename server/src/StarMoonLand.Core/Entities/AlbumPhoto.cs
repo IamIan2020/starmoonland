@@ -9,5 +9,5 @@ public class AlbumPhoto
     public string? Caption { get; set; }
     public int SortOrder { get; set; }
 
-    public Album Album { get; set; } = null!;
+    public Album? Album { get; set; }
 }

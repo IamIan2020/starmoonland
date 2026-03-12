@@ -15,5 +15,5 @@ public class News
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
-    public NewsCategory Category { get; set; } = null!;
+    public NewsCategory? Category { get; set; }
 }
