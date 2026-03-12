@@ -20,8 +20,15 @@ public class AdminPagesController : ControllerBase
     public async Task<IActionResult> GetCategories()
     {
         var categories = await _db.PageCategories
-            .Include(c => c.Pages.OrderBy(p => p.SortOrder))
             .OrderBy(c => c.SortOrder)
+            .Select(c => new
+            {
+                c.Id, c.Slug, c.TitleZh, c.TitleEn, c.BannerImage, c.SortOrder, c.IsVisible,
+                Pages = c.Pages.OrderBy(p => p.SortOrder).Select(p => new
+                {
+                    p.Id, p.Slug, p.Title, p.Subtitle, p.SortOrder, p.IsVisible
+                })
+            })
             .ToListAsync();
         return Ok(ApiResponse<object>.Ok(categories));
     }
@@ -71,10 +78,23 @@ public class AdminPagesController : ControllerBase
     [HttpGet("pages")]
     public async Task<IActionResult> GetPages([FromQuery] int? categoryId)
     {
-        var query = _db.Pages.Include(p => p.Slides.OrderBy(s => s.SortOrder))
-            .Include(p => p.Tabs.OrderBy(t => t.SortOrder)).AsQueryable();
+        var query = _db.Pages.AsQueryable();
         if (categoryId.HasValue) query = query.Where(p => p.CategoryId == categoryId);
-        var pages = await query.OrderBy(p => p.SortOrder).ToListAsync();
+        var pages = await query.OrderBy(p => p.SortOrder)
+            .Select(p => new
+            {
+                p.Id, p.CategoryId, p.Slug, p.Title, p.Subtitle, p.Content,
+                p.SortOrder, p.IsVisible, p.MetaTitle, p.MetaDescription,
+                Slides = p.Slides.OrderBy(s => s.SortOrder).Select(s => new
+                {
+                    s.Id, s.ImageUrl, s.Title, s.Description, s.SortOrder
+                }),
+                Tabs = p.Tabs.OrderBy(t => t.SortOrder).Select(t => new
+                {
+                    t.Id, t.Title, t.Content, t.SortOrder
+                })
+            })
+            .ToListAsync();
         return Ok(ApiResponse<object>.Ok(pages));
     }
 
