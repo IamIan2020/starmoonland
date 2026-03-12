@@ -1,9 +1,7 @@
 <script setup lang="ts">
+import PageCategory from '@/components/public/PageCategory.vue'
 </script>
 
 <template>
-  <div class="py-16 text-center">
-    <h2 class="text-2xl font-bold mb-4">星月服務</h2>
-    <p class="text-gray-text">頁面建置中...</p>
-  </div>
+  <PageCategory category-slug="service" category-label="星月服務" category-label-en="Service" />
 </template>

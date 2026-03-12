@@ -1,9 +1,41 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import Breadcrumb from '@/components/public/Breadcrumb.vue'
+import { newsApi } from '@/api/news'
+import type { NewsDto } from '@/types/api'
+
+const route = useRoute()
+const news = ref<NewsDto | null>(null)
+
+onMounted(async () => {
+  const id = Number(route.params.id)
+  try {
+    const { data } = await newsApi.getDetail(id)
+    if (data.success && data.data) news.value = data.data as NewsDto
+  } catch { /* 靜默 */ }
+})
 </script>
 
 <template>
-  <div class="py-16 text-center">
-    <h2 class="text-2xl font-bold mb-4">新聞詳情</h2>
-    <p class="text-gray-text">頁面建置中...</p>
+  <div>
+    <Breadcrumb :items="[{ label: 'News', to: '/news' }, ...(news ? [{ label: news.title }] : [])]" />
+
+    <div v-if="news" class="max-w-[800px] mx-auto px-4 py-10">
+      <div class="mb-6">
+        <span class="text-xs text-gold mr-2">{{ news.categoryName }}</span>
+        <span class="text-xs text-gray-text">{{ new Date(news.publishDate).toLocaleDateString('zh-TW') }}</span>
+      </div>
+      <h1 class="text-2xl md:text-3xl font-bold mb-6">{{ news.title }}</h1>
+      <img
+        v-if="news.coverImage"
+        :src="`/uploads/${news.coverImage}`"
+        :alt="news.title"
+        class="w-full mb-8"
+      />
+      <div class="prose max-w-none" v-html="news.content" />
+    </div>
+
+    <div v-else class="py-20 text-center text-gray-text">載入中...</div>
   </div>
 </template>
