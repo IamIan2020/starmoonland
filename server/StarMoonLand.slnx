@@ -1,0 +1,7 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/StarMoonLand.Api/StarMoonLand.Api.csproj" />
+    <Project Path="src/StarMoonLand.Core/StarMoonLand.Core.csproj" />
+    <Project Path="src/StarMoonLand.Infrastructure/StarMoonLand.Infrastructure.csproj" />
+  </Folder>
+</Solution>
