@@ -1,0 +1,28 @@
+schema: spec-driven
+
+context: |
+  專案：星月大地（Star Moon Land）休閒渡假村形象網站 + CMS 後台管理系統
+  位置：台中后里
+
+  技術棧：
+  - 後端：.NET 10 + ASP.NET Core Web API
+  - 認證：ASP.NET Identity + JWT（Access Token + Refresh Token）
+  - ORM：Entity Framework Core + Npgsql
+  - 驗證：FluentValidation
+  - API 文件：Swashbuckle（Swagger）
+  - 前端：Vue 3 + TypeScript + Vite + Pinia + Vue Router
+  - 前台 UI：Tailwind CSS（品牌形象自訂設計）
+  - 後台 UI：PrimeVue 4
+  - 富文本：WangEditor
+  - 資料庫：PostgreSQL
+  - Email：MailKit（SMTP）
+
+  架構參考：宮廟系統（E:\Web\temples）
+  開發流程：遵循 CLAUDE.md 中定義的 OpenSpec 開發紀律
+  語言：所有說明使用繁體中文
+
+  前端結構：單一專案，前台（views/public/）使用 Tailwind CSS，
+  後台（views/backstage/）使用 PrimeVue 4
+
+  統一 API 回應格式：ApiResponse<T>（Success, Data, Message, Errors）
+  Conventional Commits 格式的 commit message
