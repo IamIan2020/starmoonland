@@ -15,10 +15,10 @@ onMounted(async () => {
 })
 
 const services = [
-  { title: '大地營區', slug: 'camp', desc: '在星月大地的懷抱中，享受露營的樂趣', img: '/_images/index/index_camp.jpg' },
-  { title: '大地烤肉', slug: 'bbq', desc: '與親朋好友一同享受戶外烤肉的歡樂時光', img: '/_images/index/index_bbq.jpg' },
-  { title: '大地風呂', slug: 'hotspring', desc: '在自然美景中享受溫泉的療癒', img: '/_images/index/index_bath.jpg' },
-  { title: '星月文旅', slug: 'stay', desc: '精心設計的住宿空間，讓您盡享休憩時光', img: '/_images/index/index_stay.jpg' },
+  { title: '大地營區', slug: 'camp', desc: '遠眺美景．星月大地．親子野餐', img: '/_images/index/img-intro-01.png' },
+  { title: '大地烤肉', slug: 'bbq', desc: '星月大地提供大台中微涼夜烤的新選擇', img: '/_images/index/img-intro-03.png' },
+  { title: '大地風呂', slug: 'hotspring', desc: '露天冷熱湯池、多功能SPA池、檜木烤箱、蒸氣室、五星級衛浴', img: '/_images/index/img-intro-05.png' },
+  { title: '星月文旅', slug: 'stay', desc: '旅途中放慢腳步、放鬆身心、享受在星月大地的「美」分「美」秒。', img: '/_images/index/img-intro-07.png' },
 ]
 </script>
 

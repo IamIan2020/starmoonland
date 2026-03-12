@@ -37,8 +37,8 @@ const modules = [Autoplay, Pagination, EffectFade]
     <div class="absolute bottom-0 left-0 right-0 z-10 bg-dark/80 py-4">
       <div class="max-w-[1200px] mx-auto px-4 flex flex-col sm:flex-row items-center justify-center gap-4 text-white text-sm">
         <span class="text-gold font-serif text-lg">星月大地景觀休閒園區</span>
-        <span><i class="pi pi-phone mr-1" /> 04-25831839</span>
-        <span><i class="pi pi-map-marker mr-1" /> 台中市后里區月眉北路482號</span>
+        <span><i class="pi pi-phone mr-1" /> 04-26831671</span>
+        <span><i class="pi pi-map-marker mr-1" /> 台中市后里區月眉北路486號</span>
       </div>
     </div>
 
