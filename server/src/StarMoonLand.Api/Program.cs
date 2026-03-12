@@ -7,6 +7,8 @@ using StarMoonLand.Api.Middleware;
 using StarMoonLand.Core.Entities;
 using StarMoonLand.Core.Interfaces;
 using StarMoonLand.Core.Services;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using StarMoonLand.Infrastructure.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -76,6 +78,10 @@ builder.Services.AddControllers()
 // Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// FluentValidation
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 // DI 註冊
 builder.Services.AddScoped<IAuthService, AuthService>();
