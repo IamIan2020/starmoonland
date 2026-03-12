@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import { settingsApi } from '@/api/settings'
 import type { HomepageData } from '@/types/api'
 import HeroSlider from '@/components/public/HeroSlider.vue'
+import { resolveImageUrl } from '@/utils/image'
 
 const data = ref<HomepageData | null>(null)
 
@@ -43,7 +44,7 @@ const services = [
           >
             <div class="aspect-[4/3] overflow-hidden mb-3">
               <img
-                :src="news.coverImage ? `/uploads/${news.coverImage}` : '/_images/all/news_default.jpg'"
+                :src="news.coverImage ? resolveImageUrl(news.coverImage) : '/_images/all/news_default.jpg'"
                 :alt="news.title"
                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
               />
@@ -104,7 +105,7 @@ const services = [
             class="group aspect-square overflow-hidden"
           >
             <img
-              :src="album.coverImage ? `/uploads/${album.coverImage}` : '/_images/all/album_default.jpg'"
+              :src="album.coverImage ? resolveImageUrl(album.coverImage) : '/_images/all/album_default.jpg'"
               :alt="album.title"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />

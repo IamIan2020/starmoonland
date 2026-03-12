@@ -6,6 +6,7 @@ import { Fancybox } from '@fancyapps/ui'
 import '@fancyapps/ui/dist/fancybox/fancybox.css'
 import { albumsApi } from '@/api/albums'
 import type { AlbumDto } from '@/types/api'
+import { resolveImageUrl } from '@/utils/image'
 
 const route = useRoute()
 const album = ref<AlbumDto | null>(null)
@@ -32,13 +33,13 @@ onMounted(async () => {
         <a
           v-for="photo in album.photos"
           :key="photo.id"
-          :href="`/uploads/${photo.imageUrl}`"
+          :href="resolveImageUrl(photo.imageUrl)"
           data-fancybox="gallery"
           :data-caption="photo.caption"
           class="aspect-square overflow-hidden bg-gray-100 cursor-pointer"
         >
           <img
-            :src="`/uploads/${photo.thumbnailUrl || photo.imageUrl}`"
+            :src="resolveImageUrl(photo.thumbnailUrl || photo.imageUrl)"
             :alt="photo.caption || ''"
             class="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
           />

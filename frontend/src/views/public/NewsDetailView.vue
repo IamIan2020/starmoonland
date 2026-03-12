@@ -5,6 +5,7 @@ import Breadcrumb from '@/components/public/Breadcrumb.vue'
 import { newsApi } from '@/api/news'
 import type { NewsDto } from '@/types/api'
 import { sanitizeHtml } from '@/utils/sanitize'
+import { resolveImageUrl } from '@/utils/image'
 
 const route = useRoute()
 const news = ref<NewsDto | null>(null)
@@ -30,7 +31,7 @@ onMounted(async () => {
       <h1 class="text-2xl md:text-3xl font-bold mb-6">{{ news.title }}</h1>
       <img
         v-if="news.coverImage"
-        :src="`/uploads/${news.coverImage}`"
+        :src="resolveImageUrl(news.coverImage!)"
         :alt="news.title"
         class="w-full mb-8"
       />

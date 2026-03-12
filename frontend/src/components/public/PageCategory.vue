@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import 'swiper/swiper-bundle.css'
 import Breadcrumb from './Breadcrumb.vue'
 import PageSlides from './PageSlides.vue'
 import { pagesApi } from '@/api/pages'

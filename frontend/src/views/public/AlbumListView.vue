@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import Breadcrumb from '@/components/public/Breadcrumb.vue'
 import { albumsApi } from '@/api/albums'
 import type { AlbumDto } from '@/types/api'
+import { resolveImageUrl } from '@/utils/image'
 
 const albums = ref<AlbumDto[]>([])
 const loading = ref(true)
@@ -36,7 +37,7 @@ onMounted(async () => {
         >
           <div class="aspect-square overflow-hidden mb-2 bg-gray-100">
             <img
-              :src="album.coverImage ? `/uploads/${album.coverImage}` : '/_images/all/album_default.jpg'"
+              :src="album.coverImage ? resolveImageUrl(album.coverImage) : '/_images/all/album_default.jpg'"
               :alt="album.title"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />

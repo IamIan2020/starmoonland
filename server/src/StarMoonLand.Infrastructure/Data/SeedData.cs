@@ -38,10 +38,10 @@ public static class SeedData
         }
 
         // === 頁面分類 ===
-        await SeedOrUpdateCategoryAsync(context, "about", "星月故事", "About", "about/banner.png", 1);
-        await SeedOrUpdateCategoryAsync(context, "service", "星月服務", "Service", "service/banner.png", 2);
-        await SeedOrUpdateCategoryAsync(context, "dining", "餐飲宴會", "Dining", "dining/banner.png", 3);
-        await SeedOrUpdateCategoryAsync(context, "wedding", "幸福婚宴", "Wedding", "wedding/banner.png", 4);
+        await SeedOrUpdateCategoryAsync(context, "about", "星月故事", "About", "/_images/about/banner.png", 1);
+        await SeedOrUpdateCategoryAsync(context, "service", "星月服務", "Service", "/_images/service/banner.png", 2);
+        await SeedOrUpdateCategoryAsync(context, "dining", "餐飲宴會", "Dining", "/_images/dining/banner.png", 3);
+        await SeedOrUpdateCategoryAsync(context, "wedding", "幸福婚宴", "Wedding", "/_images/wedding/banner.png", 4);
         await context.SaveChangesAsync();
 
         var aboutId = (await context.PageCategories.FirstAsync(c => c.Slug == "about")).Id;
@@ -130,6 +130,9 @@ public static class SeedData
 
         // === 交通資訊 ===
         await SeedOrUpdateTrafficAsync(context);
+
+        // === 修正舊的圖片路徑前綴 ===
+        await FixImageUrlPrefixesAsync(context);
     }
 
     // ===== Helper Methods =====
@@ -166,6 +169,11 @@ public static class SeedData
 
     private static async Task SeedPageSlidesIfEmptyAsync(AppDbContext ctx)
     {
+        // 修正舊的圖片路徑（不含 /_images/ 前綴的）
+        var oldSlides = await ctx.Set<PageSlide>().Where(s => !s.ImageUrl.StartsWith("/")).ToListAsync();
+        foreach (var s in oldSlides) s.ImageUrl = $"/_images/{s.ImageUrl}";
+        if (oldSlides.Count > 0) await ctx.SaveChangesAsync();
+
         if (await ctx.Set<PageSlide>().AnyAsync()) return;
 
         var pages = await ctx.Pages.Include(p => p.Category).ToListAsync();
@@ -185,66 +193,66 @@ public static class SeedData
 
         if (vision != null)
         {
-            slides.Add(new PageSlide { PageId = vision.Id, ImageUrl = "about/class-1-pic-1.png", Title = "壯麗山景", Description = "隨著四季、氣候不同的轉變，有壯麗清新的山景、落日餘暉的火燒雲夕陽、萬家燈火及滿天繁星的熠熠夜景、可遇不可求如仙境般的漫漫雲海，以及站上這片大地的制高點，不必登高山，即可瞭望遠方山海空一線美景。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = vision.Id, ImageUrl = "about/class-1-pic-2.png", Title = "南洋情調", Description = "走在園區造景，不必出國，就能感受濃厚南洋般的異國情調、美饌上桌，多元的餐飲服務選擇，滿足不同饕客的絕對味蕾。", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = vision.Id, ImageUrl = "/_images/about/class-1-pic-1.png", Title = "壯麗山景", Description = "隨著四季、氣候不同的轉變，有壯麗清新的山景、落日餘暉的火燒雲夕陽、萬家燈火及滿天繁星的熠熠夜景、可遇不可求如仙境般的漫漫雲海，以及站上這片大地的制高點，不必登高山，即可瞭望遠方山海空一線美景。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = vision.Id, ImageUrl = "/_images/about/class-1-pic-2.png", Title = "南洋情調", Description = "走在園區造景，不必出國，就能感受濃厚南洋般的異國情調、美饌上桌，多元的餐飲服務選擇，滿足不同饕客的絕對味蕾。", SortOrder = 2 });
         }
 
         if (camp != null)
         {
-            slides.Add(new PageSlide { PageId = camp.Id, ImageUrl = "service/class-1-pic-1.png", Title = "遠眺美景", Description = "白天的星月大地就似清景在新春，綠柳纔黃半未勻 黃昏時刻的星月大地彩霞滿天，最是浪漫有情天 夜晚的星月大地，月夕花朝，加上火炎山下璀璨爛漫的熠熠燈火，可謂人間仙境。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = camp.Id, ImageUrl = "service/class-1-pic-2.png", Title = "星月大地", Description = "白天的星月大地就似清景在新春，綠柳纔黃半未勻 黃昏時刻的星月大地彩霞滿天，最是浪漫有情天 夜晚的星月大地，月夕花朝，加上火炎山下璀璨爛漫的熠熠燈火，可謂人間仙境。", SortOrder = 2 });
-            slides.Add(new PageSlide { PageId = camp.Id, ImageUrl = "service/class-1-pic-3.png", Title = "親子野餐", Description = "白天的星月大地就似清景在新春，綠柳纔黃半未勻 黃昏時刻的星月大地彩霞滿天，最是浪漫有情天 夜晚的星月大地，月夕花朝，加上火炎山下璀璨爛漫的熠熠燈火，可謂人間仙境。", SortOrder = 3 });
+            slides.Add(new PageSlide { PageId = camp.Id, ImageUrl = "/_images/service/class-1-pic-1.png", Title = "遠眺美景", Description = "白天的星月大地就似清景在新春，綠柳纔黃半未勻 黃昏時刻的星月大地彩霞滿天，最是浪漫有情天 夜晚的星月大地，月夕花朝，加上火炎山下璀璨爛漫的熠熠燈火，可謂人間仙境。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = camp.Id, ImageUrl = "/_images/service/class-1-pic-2.png", Title = "星月大地", Description = "白天的星月大地就似清景在新春，綠柳纔黃半未勻 黃昏時刻的星月大地彩霞滿天，最是浪漫有情天 夜晚的星月大地，月夕花朝，加上火炎山下璀璨爛漫的熠熠燈火，可謂人間仙境。", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = camp.Id, ImageUrl = "/_images/service/class-1-pic-3.png", Title = "親子野餐", Description = "白天的星月大地就似清景在新春，綠柳纔黃半未勻 黃昏時刻的星月大地彩霞滿天，最是浪漫有情天 夜晚的星月大地，月夕花朝，加上火炎山下璀璨爛漫的熠熠燈火，可謂人間仙境。", SortOrder = 3 });
         }
 
         if (bbq != null)
         {
-            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "service/class-2-pic-1.png", Title = "趣味烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "service/class-2-pic-2.png", Title = "觀星烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 2 });
-            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "service/class-2-pic-3.png", Title = "賞月烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 3 });
-            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "service/class-2-pic-4.png", Title = "大地烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 4 });
+            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "/_images/service/class-2-pic-1.png", Title = "趣味烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "/_images/service/class-2-pic-2.png", Title = "觀星烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "/_images/service/class-2-pic-3.png", Title = "賞月烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 3 });
+            slides.Add(new PageSlide { PageId = bbq.Id, ImageUrl = "/_images/service/class-2-pic-4.png", Title = "大地烤肉", Description = "星月大地提供大台中微涼夜烤的新選擇", SortOrder = 4 });
         }
 
         if (hotspring != null)
         {
-            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "service/class-3-pic-1.png", Title = "露天冷熱湯池", Description = "讓所有遠道而來的朋友們，都能在濃厚南洋異國風情的造景中，享受園區芬多精之餘，感受滋潤肌膚的美人湯品。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "service/class-3-pic-2.png", Title = "多功能SPA池", Description = "於平常忙碌擾嚷的生活中，好好放鬆、讓壓力隨汗水蒸發、一掃而空。", SortOrder = 2 });
-            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "service/class-3-pic-3.png", Title = "檜木烤箱", Description = "並與同行湯友，一起仰望點點繁星的浪漫夜空。", SortOrder = 3 });
-            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "service/class-3-pic-4.png", Title = "蒸氣室", Description = "在濃厚南洋異國風情的造景中，享受園區芬多精。", SortOrder = 4 });
-            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "service/class-3-pic-5.png", Title = "五星級衛浴", Description = "感受滋潤肌膚的美人湯品，好好放鬆身心。", SortOrder = 5 });
+            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "/_images/service/class-3-pic-1.png", Title = "露天冷熱湯池", Description = "讓所有遠道而來的朋友們，都能在濃厚南洋異國風情的造景中，享受園區芬多精之餘，感受滋潤肌膚的美人湯品。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "/_images/service/class-3-pic-2.png", Title = "多功能SPA池", Description = "於平常忙碌擾嚷的生活中，好好放鬆、讓壓力隨汗水蒸發、一掃而空。", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "/_images/service/class-3-pic-3.png", Title = "檜木烤箱", Description = "並與同行湯友，一起仰望點點繁星的浪漫夜空。", SortOrder = 3 });
+            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "/_images/service/class-3-pic-4.png", Title = "蒸氣室", Description = "在濃厚南洋異國風情的造景中，享受園區芬多精。", SortOrder = 4 });
+            slides.Add(new PageSlide { PageId = hotspring.Id, ImageUrl = "/_images/service/class-3-pic-5.png", Title = "五星級衛浴", Description = "感受滋潤肌膚的美人湯品，好好放鬆身心。", SortOrder = 5 });
         }
 
         if (stay != null)
         {
-            slides.Add(new PageSlide { PageId = stay.Id, ImageUrl = "service/class-3-pic-1.png", Title = "湯屋設施", Description = "每間房間設立湯屋，讓所有入住的朋友們都能放鬆身心。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = stay.Id, ImageUrl = "service/class-3-pic-2.png", Title = "北歐風格", Description = "全館以簡潔卻不失其特色的北歐風打造。", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = stay.Id, ImageUrl = "/_images/service/class-3-pic-1.png", Title = "湯屋設施", Description = "每間房間設立湯屋，讓所有入住的朋友們都能放鬆身心。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = stay.Id, ImageUrl = "/_images/service/class-3-pic-2.png", Title = "北歐風格", Description = "全館以簡潔卻不失其特色的北歐風打造。", SortOrder = 2 });
         }
 
         if (banquet != null)
         {
-            slides.Add(new PageSlide { PageId = banquet.Id, ImageUrl = "dining/class-1-pic-1.png", Title = "星級主廚", Description = "由行政總主廚領軍的廚師團隊，將在地當季食材創意入菜。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = banquet.Id, ImageUrl = "dining/class-1-pic-2.png", Title = "特色料理", Description = "有一種料理，不是論斤論兩的調味比例，而是「用愛家人的心」悉心烹調。", SortOrder = 2 });
-            slides.Add(new PageSlide { PageId = banquet.Id, ImageUrl = "dining/class-1-pic-3.png", Title = "桌席宴會", Description = "景觀宴會館採整面落地窗設計，讓所有用餐的賓客都能在佳餚相伴之際，有美景相隨。", SortOrder = 3 });
+            slides.Add(new PageSlide { PageId = banquet.Id, ImageUrl = "/_images/dining/class-1-pic-1.png", Title = "星級主廚", Description = "由行政總主廚領軍的廚師團隊，將在地當季食材創意入菜。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = banquet.Id, ImageUrl = "/_images/dining/class-1-pic-2.png", Title = "特色料理", Description = "有一種料理，不是論斤論兩的調味比例，而是「用愛家人的心」悉心烹調。", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = banquet.Id, ImageUrl = "/_images/dining/class-1-pic-3.png", Title = "桌席宴會", Description = "景觀宴會館採整面落地窗設計，讓所有用餐的賓客都能在佳餚相伴之際，有美景相隨。", SortOrder = 3 });
         }
 
         if (cafe != null)
         {
-            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "dining/class-2-pic-1.png", Title = "精選套餐", Description = "提供主廚套餐（定食、火鍋、義大利麵）及招牌蜜糖吐司、下午茶、炸物、風味飲品等多元餐飲服務。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "dining/class-2-pic-2.png", Title = "浪漫下午茶", Description = "享譽全台的特製豪華蜜糖吐司席宴開放所有朋友於一周前預約", SortOrder = 2 });
-            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "dining/class-2-pic-3.png", Title = "室內空間", Description = "可瞭望遠方山海空一線美景、享受居高臨下的廣闊景色", SortOrder = 3 });
-            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "dining/class-2-pic-4.png", Title = "戶外環境", Description = "270度無死角觀景台，可瞭望遠方山海空一線美景、享受居高臨下的廣闊景色", SortOrder = 4 });
+            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "/_images/dining/class-2-pic-1.png", Title = "精選套餐", Description = "提供主廚套餐（定食、火鍋、義大利麵）及招牌蜜糖吐司、下午茶、炸物、風味飲品等多元餐飲服務。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "/_images/dining/class-2-pic-2.png", Title = "浪漫下午茶", Description = "享譽全台的特製豪華蜜糖吐司席宴開放所有朋友於一周前預約", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "/_images/dining/class-2-pic-3.png", Title = "室內空間", Description = "可瞭望遠方山海空一線美景、享受居高臨下的廣闊景色", SortOrder = 3 });
+            slides.Add(new PageSlide { PageId = cafe.Id, ImageUrl = "/_images/dining/class-2-pic-4.png", Title = "戶外環境", Description = "270度無死角觀景台，可瞭望遠方山海空一線美景、享受居高臨下的廣闊景色", SortOrder = 4 });
         }
 
         if (proposal != null)
         {
-            slides.Add(new PageSlide { PageId = proposal.Id, ImageUrl = "wedding/class-1-pic-1.png", Title = "永遠不散的戀愛", Description = "在星月大地園區制高點上、以天地為憑證，與彼此開始一場永遠不散的戀愛。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = proposal.Id, ImageUrl = "wedding/class-1-pic-2.png", Title = "浪漫求婚", Description = "在熠熠美景相伴、精心策畫流程相隨的浪漫氛圍下求婚。", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = proposal.Id, ImageUrl = "/_images/wedding/class-1-pic-1.png", Title = "永遠不散的戀愛", Description = "在星月大地園區制高點上、以天地為憑證，與彼此開始一場永遠不散的戀愛。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = proposal.Id, ImageUrl = "/_images/wedding/class-1-pic-2.png", Title = "浪漫求婚", Description = "在熠熠美景相伴、精心策畫流程相隨的浪漫氛圍下求婚。", SortOrder = 2 });
         }
 
         if (ceremony != null)
         {
-            slides.Add(new PageSlide { PageId = ceremony.Id, ImageUrl = "wedding/class-2-pic-1.png", Title = "中式文定", Description = "星月大地提供中式文定場地及布置。", SortOrder = 1 });
-            slides.Add(new PageSlide { PageId = ceremony.Id, ImageUrl = "wedding/class-2-pic-2.png", Title = "歐式證婚場地", Description = "提供歐式證婚場地及布置。", SortOrder = 2 });
-            slides.Add(new PageSlide { PageId = ceremony.Id, ImageUrl = "wedding/class-2-pic-3.png", Title = "歐式婚佈", Description = "客製最浪漫不俗的完美婚禮。", SortOrder = 3 });
+            slides.Add(new PageSlide { PageId = ceremony.Id, ImageUrl = "/_images/wedding/class-2-pic-1.png", Title = "中式文定", Description = "星月大地提供中式文定場地及布置。", SortOrder = 1 });
+            slides.Add(new PageSlide { PageId = ceremony.Id, ImageUrl = "/_images/wedding/class-2-pic-2.png", Title = "歐式證婚場地", Description = "提供歐式證婚場地及布置。", SortOrder = 2 });
+            slides.Add(new PageSlide { PageId = ceremony.Id, ImageUrl = "/_images/wedding/class-2-pic-3.png", Title = "歐式婚佈", Description = "客製最浪漫不俗的完美婚禮。", SortOrder = 3 });
         }
 
         ctx.Set<PageSlide>().AddRange(slides);
@@ -406,7 +414,7 @@ public static class SeedData
                 Title = "星月大地粽藝大集合 包粽pk大賽！",
                 Summary = "星月大地端午節特別企劃－「粽」藝大集合！包粽PK大賽！第一名現場就把3000元現金帶回家",
                 Content = "<p>星月大地端午節特別企劃－「粽」藝大集合！包粽PK大賽！</p><p>第一名現場就把3000元現金帶回家！</p>",
-                CoverImage = "news/news-pic-1.png",
+                CoverImage = "/_images/news/news-pic-1.png",
                 PublishDate = new DateTime(2025, 5, 28, 0, 0, 0, DateTimeKind.Utc),
                 IsPublished = true, IsPinned = true
             },
@@ -416,7 +424,7 @@ public static class SeedData
                 Title = "星樂大地跨年專案－樂yeah!越美麗",
                 Summary = "星月大地跨年活動精彩不間斷，歡迎大家一同來迎接新的一年！",
                 Content = "<p>星樂大地跨年專案－樂yeah!越美麗</p><p>跨年活動精彩不間斷！</p>",
-                CoverImage = "news/news-pic-2.png",
+                CoverImage = "/_images/news/news-pic-2.png",
                 PublishDate = new DateTime(2025, 12, 31, 0, 0, 0, DateTimeKind.Utc),
                 IsPublished = true
             },
@@ -426,7 +434,7 @@ public static class SeedData
                 Title = "星月大地春季活動 親子同樂會",
                 Summary = "星月大地春季親子同樂活動，歡迎全家大小一起來體驗大自然的美好！",
                 Content = "<p>星月大地春季親子同樂活動</p><p>歡迎全家大小一起來體驗大自然的美好！</p>",
-                CoverImage = "news/news-pic-3.png",
+                CoverImage = "/_images/news/news-pic-3.png",
                 PublishDate = new DateTime(2025, 5, 18, 0, 0, 0, DateTimeKind.Utc),
                 IsPublished = true
             }
@@ -451,19 +459,19 @@ public static class SeedData
         var eventAlbumCat = await ctx.AlbumCategories.FirstOrDefaultAsync(c => c.Slug == "events");
         if (eventAlbumCat == null) return;
 
-        var album1 = new Album { CategoryId = eventAlbumCat.Id, Title = "大地同樂繪", CoverImage = "album/album-pic-1.png", Description = "歡慶兒童節－大地童樂繪\n讓愛遠翔竹蜻蜓彩繪DIY完美落幕", IsPublished = true, SortOrder = 1 };
-        var album2 = new Album { CategoryId = eventAlbumCat.Id, Title = "戶外證婚", CoverImage = "album/album-pic-2.png", Description = "以天為憑 以地為證\n全台唯一在壯麗火炎山下的浪漫戶外證婚", IsPublished = true, SortOrder = 2 };
-        var album3 = new Album { CategoryId = eventAlbumCat.Id, Title = "紅酒馬拉松", CoverImage = "album/album-pic-3.png", Description = "一年一度的紅酒馬拉松變裝嘉年華", IsPublished = true, SortOrder = 3 };
-        var album4 = new Album { CategoryId = eventAlbumCat.Id, Title = "星月車聚", CoverImage = "album/album-pic-4.png", Description = "Hyundai i10第一屆年度大會師&偉士牌車聚", IsPublished = true, SortOrder = 4 };
+        var album1 = new Album { CategoryId = eventAlbumCat.Id, Title = "大地同樂繪", CoverImage = "/_images/album/album-pic-1.png", Description = "歡慶兒童節－大地童樂繪\n讓愛遠翔竹蜻蜓彩繪DIY完美落幕", IsPublished = true, SortOrder = 1 };
+        var album2 = new Album { CategoryId = eventAlbumCat.Id, Title = "戶外證婚", CoverImage = "/_images/album/album-pic-2.png", Description = "以天為憑 以地為證\n全台唯一在壯麗火炎山下的浪漫戶外證婚", IsPublished = true, SortOrder = 2 };
+        var album3 = new Album { CategoryId = eventAlbumCat.Id, Title = "紅酒馬拉松", CoverImage = "/_images/album/album-pic-3.png", Description = "一年一度的紅酒馬拉松變裝嘉年華", IsPublished = true, SortOrder = 3 };
+        var album4 = new Album { CategoryId = eventAlbumCat.Id, Title = "星月車聚", CoverImage = "/_images/album/album-pic-4.png", Description = "Hyundai i10第一屆年度大會師&偉士牌車聚", IsPublished = true, SortOrder = 4 };
 
         ctx.Albums.AddRange(album1, album2, album3, album4);
         await ctx.SaveChangesAsync();
 
         ctx.Set<AlbumPhoto>().AddRange(
-            new AlbumPhoto { AlbumId = album1.Id, ImageUrl = "album/album-pic-1.png", Caption = "大地同樂繪", SortOrder = 1 },
-            new AlbumPhoto { AlbumId = album2.Id, ImageUrl = "album/album-pic-2.png", Caption = "戶外證婚", SortOrder = 1 },
-            new AlbumPhoto { AlbumId = album3.Id, ImageUrl = "album/album-pic-3.png", Caption = "紅酒馬拉松", SortOrder = 1 },
-            new AlbumPhoto { AlbumId = album4.Id, ImageUrl = "album/album-pic-4.png", Caption = "星月車聚", SortOrder = 1 }
+            new AlbumPhoto { AlbumId = album1.Id, ImageUrl = "/_images/album/album-pic-1.png", Caption = "大地同樂繪", SortOrder = 1 },
+            new AlbumPhoto { AlbumId = album2.Id, ImageUrl = "/_images/album/album-pic-2.png", Caption = "戶外證婚", SortOrder = 1 },
+            new AlbumPhoto { AlbumId = album3.Id, ImageUrl = "/_images/album/album-pic-3.png", Caption = "紅酒馬拉松", SortOrder = 1 },
+            new AlbumPhoto { AlbumId = album4.Id, ImageUrl = "/_images/album/album-pic-4.png", Caption = "星月車聚", SortOrder = 1 }
         );
         await ctx.SaveChangesAsync();
     }
@@ -543,14 +551,36 @@ public static class SeedData
         await ctx.SaveChangesAsync();
     }
 
+    private static async Task FixImageUrlPrefixesAsync(AppDbContext ctx)
+    {
+        // 修正所有不含 / 前綴的圖片路徑
+        var news = await ctx.News.Where(n => n.CoverImage != null && !n.CoverImage.StartsWith("/")).ToListAsync();
+        foreach (var n in news) n.CoverImage = $"/_images/{n.CoverImage}";
+
+        var albums = await ctx.Albums.Where(a => a.CoverImage != null && !a.CoverImage.StartsWith("/")).ToListAsync();
+        foreach (var a in albums) a.CoverImage = $"/_images/{a.CoverImage}";
+
+        var photos = await ctx.Set<AlbumPhoto>().Where(p => !p.ImageUrl.StartsWith("/")).ToListAsync();
+        foreach (var p in photos) p.ImageUrl = $"/_images/{p.ImageUrl}";
+
+        var homepageSlides = await ctx.HomepageSlides.Where(h => !h.ImageUrl.StartsWith("/")).ToListAsync();
+        foreach (var h in homepageSlides) h.ImageUrl = $"/_images/{h.ImageUrl}";
+
+        var categories = await ctx.PageCategories.Where(c => c.BannerImage != null && !c.BannerImage.StartsWith("/")).ToListAsync();
+        foreach (var c in categories) c.BannerImage = $"/_images/{c.BannerImage}";
+
+        if (news.Count + albums.Count + photos.Count + homepageSlides.Count + categories.Count > 0)
+            await ctx.SaveChangesAsync();
+    }
+
     private static async Task SeedHomepageSlidesAsync(AppDbContext ctx)
     {
         var slides = new[]
         {
-            new { ImageUrl = "index/banner-01.png", AltText = "星月大地景觀休閒園區", SortOrder = 1 },
-            new { ImageUrl = "index/banner-02.png", AltText = "大地景觀", SortOrder = 2 },
-            new { ImageUrl = "index/banner-03.png", AltText = "星月餐飲", SortOrder = 3 },
-            new { ImageUrl = "index/banner-04.png", AltText = "星月訊息", SortOrder = 4 },
+            new { ImageUrl = "/_images/index/banner-01.png", AltText = "星月大地景觀休閒園區", SortOrder = 1 },
+            new { ImageUrl = "/_images/index/banner-02.png", AltText = "大地景觀", SortOrder = 2 },
+            new { ImageUrl = "/_images/index/banner-03.png", AltText = "星月餐飲", SortOrder = 3 },
+            new { ImageUrl = "/_images/index/banner-04.png", AltText = "星月訊息", SortOrder = 4 },
         };
 
         foreach (var s in slides)

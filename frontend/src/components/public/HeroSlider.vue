@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
 import type { HomepageSlideDto } from '@/types/api'
+import { resolveImageUrl } from '@/utils/image'
 
 const props = defineProps<{
   slides: HomepageSlideDto[]
@@ -40,7 +41,7 @@ onUnmounted(() => {
       :style="{ opacity: idx === current ? 1 : 0 }"
     >
       <img
-        :src="`/uploads/${slide.imageUrl}`"
+        :src="resolveImageUrl(slide.imageUrl)"
         :alt="slide.altText || '星月大地'"
         style="width: 100%; height: 100%; object-fit: cover;"
       />

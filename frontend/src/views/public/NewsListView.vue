@@ -4,6 +4,7 @@ import { RouterLink } from 'vue-router'
 import Breadcrumb from '@/components/public/Breadcrumb.vue'
 import { newsApi } from '@/api/news'
 import type { NewsDto, NewsCategoryDto } from '@/types/api'
+import { resolveImageUrl } from '@/utils/image'
 
 const news = ref<NewsDto[]>([])
 const categories = ref<NewsCategoryDto[]>([])
@@ -76,7 +77,7 @@ onMounted(() => { loadCategories(); loadNews() })
         >
           <div class="aspect-[4/3] overflow-hidden mb-3 bg-gray-100">
             <img
-              :src="item.coverImage ? `/uploads/${item.coverImage}` : '/_images/all/news_default.jpg'"
+              :src="item.coverImage ? resolveImageUrl(item.coverImage) : '/_images/all/news_default.jpg'"
               :alt="item.title"
               class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             />
