@@ -1,0 +1,52 @@
+.subject-box{
+    position: relative;
+    padding: 65px 0;
+}
+.subject-box:after{
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    margin: 20px auto 45px;
+    background-color: #ffd18c;
+}
+.subject-box .date {
+    border-style: solid;
+    border-width: 2px;
+    border-color: rgb(201, 160, 99);
+    background-color: transparent;
+    opacity: 0.9;
+    width: 80px;
+    height: 80px;
+    margin: 30px auto 50px;
+    z-index: 9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.subject-box .date.date-rotate{
+    transform: rotate(45deg);
+}
+.subject-box .date p {
+    font-family: "Noto Sans CJK TC";
+    color: #c9a063;
+    text-align: center;
+    transform: rotate(-45deg) translateX(15%);
+    display: flex;
+    align-items: center;
+}
+.subject-box .date p.month{
+    font-size: 20px;
+    padding-bottom: 10px;
+}
+.subject-box .date p.day{
+    font-size: 20px;
+    transform: rotate(-45deg) translateX(-50%);
+}
+.subject-title{
+    text-align: center;
+    position: relative;
+    font-size: 24px;
+    letter-spacing: 5px;
+    color: #c9a063;
+}

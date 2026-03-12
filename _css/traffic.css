@@ -1,0 +1,41 @@
+/* Traffic
+----------------------------------------------------------------------------- */
+
+body.traffic ul.class-link{
+    margin-bottom: 0;
+}
+
+ul.star {
+    list-style: none;
+}
+
+ul.star li {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+ul.star li:before {
+    content: '';
+    position: absolute;
+    background: url(../_images/all/li-star.png) no-repeat center top;
+    background-size: contain;
+    left: -35px;
+    width: 30px;
+    height: 30px;
+}
+
+.map.iframe-rwd {
+    position: relative;
+    padding-bottom: 40%;
+    padding-top: 30px;
+    height: 0;
+    overflow: hidden;
+    margin-bottom: 80px;
+}
+.map.iframe-rwd iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}

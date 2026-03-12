@@ -1,0 +1,22 @@
+.infobox .editor .list-item{
+    margin-bottom: 20px;
+}
+.editor .list-item .title{
+    width: 130px;
+    background-color: #cda871;
+    color: #fff;
+    padding: 8px;
+    position: relative;
+    text-align: center;
+    letter-spacing: 2px;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+.editor .list-item .title:before{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 350px;
+    border-bottom: 1px solid #cda871;
+}

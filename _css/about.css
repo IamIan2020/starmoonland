@@ -1,0 +1,46 @@
+/* About
+----------------------------------------------------------------------------- */
+.banner:before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+.origin-box{
+    background: url(../_images/about/origin.jpg) no-repeat center center;
+    background-size: cover;
+    background-attachment: fixed;
+    padding: 80px 40px;
+    margin-top: -40px;
+    color: #fff;
+}
+
+.about-box {
+    padding: 40px 20px 80px;
+}
+
+.about-box .title-son-style.style-brown p.en{
+    margin-bottom: 20px;
+}
+
+.about-box .title-son-style.style-brown p.en:after{
+    display: none;
+}
+
+.about-box .text-box {
+    text-align: center;
+}
+
+.mascot .slider-text {
+    width: auto;
+    height: auto;
+    margin: 40px 0;
+}
+
+.mascot .slider-text .text-item{
+    padding: 40px;
+}

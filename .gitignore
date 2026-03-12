@@ -1,0 +1,45 @@
+# IDE
+.vs/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+.idea/
+
+# .NET
+**/bin/
+**/obj/
+*.dll
+*.exe
+*.pdb
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Environment
+.env
+.env.local
+.env.*.local
+appsettings.Development.json
+
+# OS
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Logs
+*.log
+npm-debug.log*
+
+# Build
+server/publish/
+
+# Media uploads
+server/uploads/
+
+# null files (Windows issue prevention)
+null
+nul

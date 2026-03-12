@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(find /e/Web/starmoonland -type f -name \"*.php\" -o -name \"*.js\" -o -name \"*.html\" | xargs grep -l \"admin\\\\|back\\\\|management\\\\|dashboard\\\\|CRUD\" 2>/dev/null | head -20)",
+      "Bash(find /e/Web/starmoonland/_pages -name \"*.php\" -exec wc -l {} + | tail -20)",
+      "Bash(ls -la /e/Web/starmoonland/_pages/*/)",
+      "Bash(grep -r \"dbname\\\\|database\\\\|host\\\\|user\\\\|password\\\\|mysql\\\\|PDO\\\\|mysqli\" /e/Web/starmoonland --include=\"*.php\" 2>/dev/null | head -20)",
+      "Bash(find /e/Web/starmoonland -type f -name \"*.php\" | xargs wc -l | sort -n | tail -30)",
+      "Bash(find \"E:\\\\Web\\\\temples\\\\frontend\\\\src\" -type f \\\\\\( -name \"*.vue\" -o -name \"*.ts\" \\\\\\) 2>/dev/null | head -20)",
+      "Bash(find \"E:\\\\Web\\\\temples\" -maxdepth 1 -type f -name \".*\" | grep -E \"\\\\.\\(json|txt|md\\)$\")"
+    ]
+  }
+}
